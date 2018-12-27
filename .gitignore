@@ -1,13 +1,13 @@
 *.tar.gz
 
 *.exe
-src/bitcoin
-src/bitcoind
-src/bitcoin-cli
-src/bitcoin-tx
-src/test/test_bitcoin
-src/test/test_bitcoin_fuzzy
-src/qt/test/test_bitcoin-qt
+src/shitcoin
+src/shitcoind
+src/shitcoin-cli
+src/shitcoin-tx
+src/test/test_shitcoin
+src/test/test_shitcoin_fuzzy
+src/qt/test/test_shitcoin-qt
 
 # autoreconf
 Makefile.in
@@ -44,11 +44,11 @@ src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
 
-src/qt/bitcoin-qt.config
-src/qt/bitcoin-qt.creator
-src/qt/bitcoin-qt.creator.user
-src/qt/bitcoin-qt.files
-src/qt/bitcoin-qt.includes
+src/qt/shitcoin-qt.config
+src/qt/shitcoin-qt.creator
+src/qt/shitcoin-qt.creator.user
+src/qt/shitcoin-qt.files
+src/qt/shitcoin-qt.includes
 
 .deps
 .dirstamp
@@ -80,13 +80,13 @@ src/qt/bitcoin-qt.includes
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-bitcoin-qt
-Bitcoin-Qt.app
+shitcoin-qt
+Shitcoin-Qt.app
 background.tiff*
 
 # Unit-tests
 Makefile.test
-bitcoin-qt_test
+shitcoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -99,7 +99,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_bitcoin.coverage/
+test_shitcoin.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -114,5 +114,5 @@ test/cache/*
 
 /doc/doxygen/
 
-libbitcoinconsensus.pc
+libshitcoinconsensus.pc
 contrib/devtools/split-debug.sh

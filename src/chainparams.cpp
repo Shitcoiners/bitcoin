@@ -84,12 +84,12 @@ public:
         consensus.BIP65Height = 0; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
         consensus.BIP66Height = 0; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks // for diff retarget
+        consensus.nPowTargetTimespan = 1* 24 * 60 * 60; // two weeks // 1 day for diff retarget
         consensus.nPowTargetSpacing = 2 * 60; // 2 minutes blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nMinerConfirmationWindow = 720; //2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1609035280; // 2020
@@ -125,7 +125,15 @@ public:
         nPruneAfterHeight = 100000;
 
         // CreateGenesisBlock(timestamp, nNonce, nBits, int32_t nVersion, const CAmount& genesisReward)
-        genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1545880118, 2366075926, /*0x1e0ffff0*/ 0x1d00ffff, 1, 50 * COIN);
+
+        /*
+        genesis.nTime = 1545880118 
+		genesis.nNonce = 2366075926 
+		genesis.GetHash = 000000006a1eb644b973b8ded3c18d5713ded98da5a7c6b0dd126c437064fa32
+		genesis.hashMerkleRoot = e818a4faf32e463b880c7a66ef360e7e4e3ef11712e1ec6eb79db0a88d20eeeb
+		*/
+
 
         if(false)
         {
@@ -163,8 +171,8 @@ public:
 
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000000006a1eb644b973b8ded3c18d5713ded98da5a7c6b0dd126c437064fa32"));
+        assert(genesis.hashMerkleRoot == uint256S("0xe818a4faf32e463b880c7a66ef360e7e4e3ef11712e1ec6eb79db0a88d20eeeb"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
