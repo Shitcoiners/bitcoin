@@ -1,12 +1,12 @@
-// Copyright (c) 2011-2018 The Bitcoin Core developers
+// Copyright (c) 2011-2018 The Shitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include <config/shitcoin-config.h>
 #endif
 
-#include <qt/bitcoingui.h>
+#include <qt/shitcoingui.h>
 
 #include <chainparams.h>
 #include <qt/clientmodel.h>
@@ -80,7 +80,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("bitcoin-core", psz).toStdString();
+    return QCoreApplication::translate("shitcoin-core", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -127,11 +127,11 @@ static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTrans
     if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTranslator);
 
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
+    // Load e.g. shitcoin_de.qm (shortcut "de" needs to be defined in shitcoin.qrc)
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
+    // Load e.g. shitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in shitcoin.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
 }
@@ -147,14 +147,14 @@ void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, cons
     }
 }
 
-/** Class encapsulating Bitcoin Core startup and shutdown.
+/** Class encapsulating Shitcoin Core startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
  */
-class BitcoinCore: public QObject
+class ShitcoinCore: public QObject
 {
     Q_OBJECT
 public:
-    explicit BitcoinCore(interfaces::Node& node);
+    explicit ShitcoinCore(interfaces::Node& node);
 
 public Q_SLOTS:
     void initialize();
@@ -172,13 +172,13 @@ private:
     interfaces::Node& m_node;
 };
 
-/** Main Bitcoin application object */
-class BitcoinApplication: public QApplication
+/** Main Shitcoin application object */
+class ShitcoinApplication: public QApplication
 {
     Q_OBJECT
 public:
-    explicit BitcoinApplication(interfaces::Node& node, int &argc, char **argv);
-    ~BitcoinApplication();
+    explicit ShitcoinApplication(interfaces::Node& node, int &argc, char **argv);
+    ~ShitcoinApplication();
 
 #ifdef ENABLE_WALLET
     /// Create payment server
@@ -201,7 +201,7 @@ public:
     /// Get process return value
     int getReturnValue() const { return returnValue; }
 
-    /// Get window identifier of QMainWindow (BitcoinGUI)
+    /// Get window identifier of QMainWindow (ShitcoinGUI)
     WId getMainWinId() const;
 
     /// Setup platform style
@@ -226,7 +226,7 @@ private:
     interfaces::Node& m_node;
     OptionsModel *optionsModel;
     ClientModel *clientModel;
-    BitcoinGUI *window;
+    ShitcoinGUI *window;
     QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
@@ -240,20 +240,20 @@ private:
     void startThread();
 };
 
-#include <qt/bitcoin.moc>
+#include <qt/shitcoin.moc>
 
-BitcoinCore::BitcoinCore(interfaces::Node& node) :
+ShitcoinCore::ShitcoinCore(interfaces::Node& node) :
     QObject(), m_node(node)
 {
 }
 
-void BitcoinCore::handleRunawayException(const std::exception *e)
+void ShitcoinCore::handleRunawayException(const std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
     Q_EMIT runawayException(QString::fromStdString(m_node.getWarnings("gui")));
 }
 
-void BitcoinCore::initialize()
+void ShitcoinCore::initialize()
 {
     try
     {
@@ -267,7 +267,7 @@ void BitcoinCore::initialize()
     }
 }
 
-void BitcoinCore::shutdown()
+void ShitcoinCore::shutdown()
 {
     try
     {
@@ -282,7 +282,7 @@ void BitcoinCore::shutdown()
     }
 }
 
-BitcoinApplication::BitcoinApplication(interfaces::Node& node, int &argc, char **argv):
+ShitcoinApplication::ShitcoinApplication(interfaces::Node& node, int &argc, char **argv):
     QApplication(argc, argv),
     coreThread(0),
     m_node(node),
@@ -300,20 +300,20 @@ BitcoinApplication::BitcoinApplication(interfaces::Node& node, int &argc, char *
     setQuitOnLastWindowClosed(false);
 }
 
-void BitcoinApplication::setupPlatformStyle()
+void ShitcoinApplication::setupPlatformStyle()
 {
     // UI per-platform customization
-    // This must be done inside the BitcoinApplication constructor, or after it, because
+    // This must be done inside the ShitcoinApplication constructor, or after it, because
     // PlatformStyle::instantiate requires a QApplication
     std::string platformName;
-    platformName = gArgs.GetArg("-uiplatform", BitcoinGUI::DEFAULT_UIPLATFORM);
+    platformName = gArgs.GetArg("-uiplatform", ShitcoinGUI::DEFAULT_UIPLATFORM);
     platformStyle = PlatformStyle::instantiate(QString::fromStdString(platformName));
     if (!platformStyle) // Fall back to "other" if specified name not found
         platformStyle = PlatformStyle::instantiate("other");
     assert(platformStyle);
 }
 
-BitcoinApplication::~BitcoinApplication()
+ShitcoinApplication::~ShitcoinApplication()
 {
     if(coreThread)
     {
@@ -336,26 +336,26 @@ BitcoinApplication::~BitcoinApplication()
 }
 
 #ifdef ENABLE_WALLET
-void BitcoinApplication::createPaymentServer()
+void ShitcoinApplication::createPaymentServer()
 {
     paymentServer = new PaymentServer(this);
 }
 #endif
 
-void BitcoinApplication::createOptionsModel(bool resetSettings)
+void ShitcoinApplication::createOptionsModel(bool resetSettings)
 {
     optionsModel = new OptionsModel(m_node, nullptr, resetSettings);
 }
 
-void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
+void ShitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 {
-    window = new BitcoinGUI(m_node, platformStyle, networkStyle, 0);
+    window = new ShitcoinGUI(m_node, platformStyle, networkStyle, 0);
 
     pollShutdownTimer = new QTimer(window);
     connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
 }
 
-void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
+void ShitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
     SplashScreen *splash = new SplashScreen(m_node, 0, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
@@ -365,12 +365,12 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
     connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
 }
 
-void BitcoinApplication::startThread()
+void ShitcoinApplication::startThread()
 {
     if(coreThread)
         return;
     coreThread = new QThread(this);
-    BitcoinCore *executor = new BitcoinCore(m_node);
+    ShitcoinCore *executor = new ShitcoinCore(m_node);
     executor->moveToThread(coreThread);
 
     /*  communication to and from thread */
@@ -386,7 +386,7 @@ void BitcoinApplication::startThread()
     coreThread->start();
 }
 
-void BitcoinApplication::parameterSetup()
+void ShitcoinApplication::parameterSetup()
 {
     // Default printtoconsole to false for the GUI. GUI programs should not
     // print to the console unnecessarily.
@@ -396,14 +396,14 @@ void BitcoinApplication::parameterSetup()
     m_node.initParameterInteraction();
 }
 
-void BitcoinApplication::requestInitialize()
+void ShitcoinApplication::requestInitialize()
 {
     qDebug() << __func__ << ": Requesting initialize";
     startThread();
     Q_EMIT requestedInitialize();
 }
 
-void BitcoinApplication::requestShutdown()
+void ShitcoinApplication::requestShutdown()
 {
     // Show a simple window indicating shutdown status
     // Do this first as some of the steps may take some time below,
@@ -432,7 +432,7 @@ void BitcoinApplication::requestShutdown()
     Q_EMIT requestedShutdown();
 }
 
-void BitcoinApplication::addWallet(WalletModel* walletModel)
+void ShitcoinApplication::addWallet(WalletModel* walletModel)
 {
 #ifdef ENABLE_WALLET
     window->addWallet(walletModel);
@@ -449,7 +449,7 @@ void BitcoinApplication::addWallet(WalletModel* walletModel)
 #endif
 }
 
-void BitcoinApplication::removeWallet()
+void ShitcoinApplication::removeWallet()
 {
 #ifdef ENABLE_WALLET
     WalletModel* walletModel = static_cast<WalletModel*>(sender());
@@ -459,7 +459,7 @@ void BitcoinApplication::removeWallet()
 #endif
 }
 
-void BitcoinApplication::initializeResult(bool success)
+void ShitcoinApplication::initializeResult(bool success)
 {
     qDebug() << __func__ << ": Initialization result: " << success;
     // Set exit result.
@@ -502,7 +502,7 @@ void BitcoinApplication::initializeResult(bool success)
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
-        // bitcoin: URIs or payment requests:
+        // shitcoin: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
                          window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
@@ -518,18 +518,18 @@ void BitcoinApplication::initializeResult(bool success)
     }
 }
 
-void BitcoinApplication::shutdownResult()
+void ShitcoinApplication::shutdownResult()
 {
     quit(); // Exit second main loop invocation after shutdown finished
 }
 
-void BitcoinApplication::handleRunawayException(const QString &message)
+void ShitcoinApplication::handleRunawayException(const QString &message)
 {
-    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. Bitcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
+    QMessageBox::critical(0, "Runaway exception", ShitcoinGUI::tr("A fatal error occurred. Shitcoin can no longer continue safely and will quit.") + QString("\n\n") + message);
     ::exit(EXIT_FAILURE);
 }
 
-WId BitcoinApplication::getMainWinId() const
+WId ShitcoinApplication::getMainWinId() const
 {
     if (!window)
         return 0;
@@ -548,7 +548,7 @@ static void SetupUIArgs()
     gArgs.AddArg("-resetguisettings", "Reset all settings changed in the GUI", false, OptionsCategory::GUI);
     gArgs.AddArg("-rootcertificates=<file>", "Set SSL root certificates for payment request (default: -system-)", false, OptionsCategory::GUI);
     gArgs.AddArg("-splash", strprintf("Show splash screen on startup (default: %u)", DEFAULT_SPLASHSCREEN), false, OptionsCategory::GUI);
-    gArgs.AddArg("-uiplatform", strprintf("Select platform to customize UI for (one of windows, macosx, other; default: %s)", BitcoinGUI::DEFAULT_UIPLATFORM), true, OptionsCategory::GUI);
+    gArgs.AddArg("-uiplatform", strprintf("Select platform to customize UI for (one of windows, macosx, other; default: %s)", ShitcoinGUI::DEFAULT_UIPLATFORM), true, OptionsCategory::GUI);
 }
 
 #ifndef BITCOIN_QT_TEST
@@ -561,10 +561,10 @@ int main(int argc, char *argv[])
     // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 
     /// 1. Basic Qt initialization (not dependent on parameters or configuration)
-    Q_INIT_RESOURCE(bitcoin);
-    Q_INIT_RESOURCE(bitcoin_locale);
+    Q_INIT_RESOURCE(shitcoin);
+    Q_INIT_RESOURCE(shitcoin_locale);
 
-    BitcoinApplication app(*node, argc, argv);
+    ShitcoinApplication app(*node, argc, argv);
 #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -626,7 +626,7 @@ int main(int argc, char *argv[])
     if (!Intro::pickDataDirectory(*node))
         return EXIT_SUCCESS;
 
-    /// 6. Determine availability of data and blocks directory and parse bitcoin.conf
+    /// 6. Determine availability of data and blocks directory and parse shitcoin.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!fs::is_directory(GetDataDir(false)))
     {
@@ -676,7 +676,7 @@ int main(int argc, char *argv[])
         exit(EXIT_SUCCESS);
 
     // Start up the payment server early, too, so impatient users that click on
-    // bitcoin: links repeatedly have their payment requests routed to this process:
+    // shitcoin: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
 #endif
 
