@@ -1,12 +1,20 @@
-Bitcoin Core integration/staging tree
+Shitcoin Core
 =====================================
 
-[![Build Status](https://travis-ci.org/bitcoin/bitcoin.svg?branch=master)](https://travis-ci.org/bitcoin/bitcoin)
+https://endlessloop.me
 
-https://bitcoincore.org
+What is this Shit?
+----------------
+This is a demo coin created in 2 hours, excluding fixing some shitty QT compiling error that took 3 more hours..
+This is created to experiment with Bitcoin code and learn about some shit (not really) so I can create shitcoins easily and test stuff.
+
+
+
+
 
 What is Bitcoin?
 ----------------
+[![Build Status](https://travis-ci.org/bitcoin/bitcoin.svg?branch=master)](https://travis-ci.org/bitcoin/bitcoin)
 
 Bitcoin is an experimental digital currency that enables instant payments to
 anyone, anywhere in the world. Bitcoin uses peer-to-peer technology to operate
